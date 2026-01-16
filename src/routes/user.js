@@ -52,14 +52,15 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       .populate("fromUserId", USER_SAFE_DATA)
       .populate("toUserId", USER_SAFE_DATA);
 
-    const data = connectionRequests.map((row) => {
+    const connectionRequestsUsers = connectionRequests.map((row) => {
       if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
         return row.toUserId;
       } else {
         return row.fromUserId;
       }
     });
-    res.json({ data: data });
+
+    res.json({ data: connectionRequestsUsers });
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }
