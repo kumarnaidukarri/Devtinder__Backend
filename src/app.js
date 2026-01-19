@@ -9,7 +9,7 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-  })
+  }),
 ); // middleware fix cors
 /* 'cors config object' used to allow requests from specified 'ORIGINS DOMAINS', enables Cookies/Credentials to be sent btw frontend and backend */
 app.use(express.json()); // middleware converts JSON data into Javascript object
