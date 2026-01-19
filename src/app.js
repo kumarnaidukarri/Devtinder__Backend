@@ -30,10 +30,14 @@ connectDB()
   .then(() => {
     console.log("Database connection Success ...");
     //only after DB connection, listening for API client requests
-    app.listen(3000, function () {
-      console.log("Server listening on port 3000 ...");
+    app.listen(Number(process.env.Port_Number) || 3000, function () {
+      // Accessing Port_Number from '.ENV' file
+      console.log(
+        `Server listening on port ${process.env.Port_Number || 3000} ...`,
+      );
     });
   })
   .catch((err) => {
     console.error("Database connection Failed...");
+    console.log(err);
   });
