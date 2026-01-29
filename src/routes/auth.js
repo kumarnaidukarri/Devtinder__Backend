@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt"); //'bcrypt' Library
 const validator = require("validator"); //'validator' Library
 const { validateSignUpData } = require("../utils/validation.js");
 const userModel = require("../models/user.js");
+const { sendEmail } = require("../utils/email.js"); // Email Service
 
 // Signup API - insert user data into Database
 authRouter.post("/signup", async (req, res) => {
@@ -25,6 +26,10 @@ authRouter.post("/signup", async (req, res) => {
     });
 
     const savedUser = await userIns.save(); // data will save into Database
+
+    // Sending EMAIL to Signup User. i.e, Thank you for Signing up
+    sendEmail(emailId, firstName); // 'TO' email address and Username
+    // sendEmail("kumarnaidukarri22@gmail.com", "Kumar");
 
     /* after Signup, User must be Loggedin */
     // Create a JWT Token
