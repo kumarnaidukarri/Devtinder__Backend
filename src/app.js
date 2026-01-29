@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
 
+// require("dotenv").config();
+/* install "dotenv" library and config setup needed for accessing '.env' variables. if Nodejs version is below 20. 
+  Nodejs V20+ has built-in dotenv and auto config.
+*/
+
 const { connectDB } = require("./config/database.js");
 const cookieParser = require("cookie-parser"); //'cookie-parser' Library
 const cors = require("cors"); //'cors' Library
