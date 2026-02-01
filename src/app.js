@@ -5,6 +5,7 @@ const app = express();
 /* install "dotenv" library and config setup needed for accessing '.env' variables. if Nodejs version is below 20. 
   Nodejs V20+ has built-in dotenv and auto config.
 */
+const cron = require("./utils/cronjob.js"); // Cron Job file
 
 const { connectDB } = require("./config/database.js");
 const cookieParser = require("cookie-parser"); //'cookie-parser' Library
