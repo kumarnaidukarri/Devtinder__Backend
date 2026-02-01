@@ -8,14 +8,46 @@
 const cron = require("node-cron"); // 'Node-Cron' Library
 const { subDays, startOfDay, endOfDay } = require("date-fns"); // 'Date-Fns' Library
 
-cron.schedule("2 * * * * *", () => {
-  // "0 0 8 * * *" = "0sec 0min 8am everyday everymonth everydayofweek". it runs once at 8th hour Every Day.
-  const yesterday = subDays(new Date(), 1);
-  const yesterdayStart = startOfDay(yesterday);
-  const yesterdayEnd = endOfDay(yesterday);
-  console.log("yesterday:-      ", yesterday.toLocaleString());
-  console.log("yesterdayStart:- ", yesterdayStart.toLocaleString());
-  console.log("yesterdayEnd:-   ", yesterdayEnd.toLocaleString());
+// my modules
+const connectionRequestModel = require("../models/connectionRequest.js"); // DB model
+const { sendEmailToRemindFriendRequests } = require("./email.js"); // Email module
+
+// Send Emails to all people who got requests the Previous Day.
+cron.schedule("0 0 8 * * *", async () => {
+  // "0 0 8 * * *" = "0sec 0min 8hr(8am) everyday everymonth everydayofweek". it runs once at 8th hour Every Day.
+  try {
+    const yesterday = subDays(new Date(), 1);
+    const yesterdayStart = startOfDay(yesterday);
+    const yesterdayEnd = endOfDay(yesterday);
+
+    const pendingRequests = await connectionRequestModel
+      .find({
+        status: "interested",
+        createdAt: { $gte: yesterdayStart, $lt: yesterdayEnd },
+      })
+      .populate("fromUserId toUserId");
+    // Queries  - pending requests from YesterdayStart time(00:00) and YesterdayEnd time(23:59)
+    // Populate - applies on returned 'Mongoose Query Object'. populate will replace 'ObjectId references' with 'actual documents' from the referenced collection.
+    console.log(pendingRequests);
+
+    const listOfEmailsWithDuplicatesArr = pendingRequests.map(
+      (req) => req.toUserId.emailId,
+    );
+    const listOfEmails = [...new Set(listOfEmailsWithDuplicatesArr)]; // listofEmails without Duplicates
+    console.log(listOfEmails);
+
+    // SENDING EMAILS using 'NodeMailer' module
+    for (let email of listOfEmails) {
+      try {
+        // const res = await sendEmailToRemindFriendRequests(email);
+        // console.log(res)
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 /* COMMENTS */
