@@ -37,9 +37,27 @@ cron.schedule("0 0 8 * * *", async () => {
     console.log(listOfEmails);
 
     // SENDING EMAILS using 'NodeMailer' module
-    for (let email of listOfEmails) {
+    for (let emailId of listOfEmails) {
       try {
-        // const res = await sendEmailToRemindFriendRequests(email);
+        /*
+        const res = await sendEmailToRemindFriendRequests(
+          emailId,
+          "User",
+          `New Friend Requests are  Pending for ${emailId}`,
+          `Dear ${"User"},
+        
+        There are so many Friend Requests Pending. Please login to Devtinder and accept or reject them.
+        Start matching and connecting with fellow developers 🚀
+        
+        Cheers,
+        DevTinder Team
+        
+        You’re receiving this email because you signed up for DevTinder.
+        If you did not create this account, no action is required.
+        i.e, i randomly/unknowingly typed this email. 
+        
+        This application is a small personal project, so no worries.`,
+        ); */
         // console.log(res)
       } catch (err) {
         console.error(err);

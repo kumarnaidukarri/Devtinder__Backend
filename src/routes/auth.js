@@ -28,7 +28,26 @@ authRouter.post("/signup", async (req, res) => {
     const savedUser = await userIns.save(); // data will save into Database
 
     // Sending EMAIL to Signup User. i.e, Thank you for Signing up
-    sendEmail(emailId, firstName); // 'TO' email address and Username
+    sendEmail(
+      emailId,
+      firstName,
+      "Thanks for signing up to DevTinder Application 🚀",
+      `Dear ${firstName},
+    
+    Thanks for signing up for DevTinder!
+    We’re excited to have you join our developer community.
+    
+    Start matching and connecting with fellow developers 🚀
+    
+    Cheers,
+    DevTinder Team
+    
+    You’re receiving this email because you signed up for DevTinder.
+    If you did not create this account, no action is required.
+    i.e, i randomly/unknowingly typed this email.
+    
+    This application is a small personal project, so no worries.`,
+    ); // 'TO' email address and Username
     // sendEmail("kumarnaidukarri22@gmail.com", "Kumar");
 
     /* after Signup, User must be Loggedin */
