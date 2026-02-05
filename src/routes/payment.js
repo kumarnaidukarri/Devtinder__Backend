@@ -3,21 +3,25 @@ const paymentRouter = express.Router(); // payment router
 
 const { userAuth } = require("../middlewares/auth.js"); //Authentication Middleware
 const paymentModel = require("../models/payment.js"); //payment DB model
+const { membershipAmount } = require("../utils/constants.js"); // constants
 const razorpayInstance = require("../utils/razorpay.js"); //Razorpay integration Module
 
 // Create Order API
 paymentRouter.post("/payment/create", userAuth, async (req, res) => {
   try {
+    const { membershipType } = req.body; // "gold" or "silver"
+    const { firstName, lastName, emailId } = req.user;
+
     // 1. Razorpay will create an 'order' in Razorpay Server and returns Promise
     const order = await razorpayInstance.orders.create({
-      amount: 5000, // 5000 Paisa
+      amount: membershipAmount[membershipType] * 100, // Rupees
       currency: "INR",
       receipt: "receipt#1",
       notes: {
         // Meta data about Payment
-        firstName: "value3",
-        lastName: "value2",
-        membershipType: "silver",
+        firstName: firstName,
+        lastName: lastName,
+        membershipType: membershipType,
       },
     });
 
