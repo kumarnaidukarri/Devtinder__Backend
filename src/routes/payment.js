@@ -57,6 +57,8 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
 // Web Hooks API - Razorpay call this API.
 /* userAuth middleware shouldn't be used here in Webhook API. because, Razorpay doesn't loggedin to our system. */
 /* *Razorpay cannot call a 'localhost server urls' using 'Webhooks'.
+    Webhooks require a publicly accessible HTTPS URL. 
+    so, use "NGROK" library. it creates a Public URL and receives user traffic and forwards requests to our localhost server.  
  */
 paymentRouter.post("/payment/webhook", async (req, res) => {
   try {
