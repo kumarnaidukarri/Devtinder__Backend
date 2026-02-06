@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
           throw new Error(
             "Enter a Strong Password: " +
               value +
-              "\n note:- Password should be atleast 8 characters length, 1 uppercase, 1 lowercase, 1 number, 1 special symbol."
+              "\n note:- Password should be atleast 8 characters length, 1 uppercase, 1 lowercase, 1 number, 1 special symbol.",
           );
         }
       },
@@ -61,8 +61,10 @@ const userSchema = new mongoose.Schema(
       },
     },
     skills: { type: [String] },
+    isPremium: { type: Boolean, default: false },
+    membershipType: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Defining Instance methods in the userSchema - HELPER Methods
@@ -79,7 +81,7 @@ userSchema.methods.validatePassword = async function (passwordInputByUser) {
   const hashedPassword = user.password;
   let isPasswordValid = await bcrypt.compare(
     passwordInputByUser,
-    hashedPassword
+    hashedPassword,
   ); //(password,HashedPassword)
   return isPasswordValid;
 };
