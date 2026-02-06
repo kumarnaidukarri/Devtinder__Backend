@@ -40,7 +40,10 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
     const savedPayment = await payment.save(); // Saves in DB
 
     // 3. Return the 'Order details' to Frontend.
-    res.json({ ...savedPayment.toJSON() });
+    res.json({
+      ...savedPayment.toJSON(),
+      razorpayKeyId: process.env.RAZORPAY_KEY_ID, // Frontend need this 'Razorpay Key Id' to open 'Razorpay Payment Dialog Checkout Box'.
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ msg: err.message });
