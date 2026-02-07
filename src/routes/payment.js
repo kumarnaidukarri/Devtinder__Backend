@@ -122,3 +122,16 @@ paymentRouter.get("/premium/verify", userAuth, async (req, res) => {
 });
 
 module.exports = paymentRouter;
+
+// *** Note :-
+/* Webhooks don't work in localhost server machine.
+   use "Ngrok" library. it creates a temporary Public URL and forwards requests to your 'Localhost'. 
+   Forwarding  https://abcd-12-34-56.ngrok-free.app  ->  http://localhost:3000
+   Add 'Ngrok Url + Backend Webhook Url' in your Payment Gateway Webhooks. Add Webhook url "https://abcd-12-34-56.ngrok-free.app/paymentWebhook" instead of 'http://localhost:3000/paymentWebhook'.
+   ex: npm install ngrok
+       node server.js
+       npx ngrok http 3000 --authtoken '39LxDhBvtCtVNHRqb3k3Vv5cir6_4f4TycXi2BnGuYQo65mJ9'
+
+       =>   login into 'Ngrok website dashboard', get auth key, add it in your project when running ngrok command. 
+       => * Both Node server and Ngrok server must be runned in '2 Different Terminals'.
+*/
