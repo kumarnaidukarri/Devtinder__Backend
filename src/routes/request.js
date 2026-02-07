@@ -10,6 +10,7 @@ requestRouter.post(
   "/request/send/:status/:toUserId",
   userAuth,
   async (req, res) => {
+    console.log("Send Connection Request Send API Called");
     try {
       const fromUserId = req.user._id;
       const toUserId = req.params.toUserId;
@@ -55,7 +56,7 @@ requestRouter.post(
     } catch (err) {
       res.status(400).send("Error: " + err.message);
     }
-  }
+  },
 );
 
 // Review Connection Request API -
@@ -63,6 +64,7 @@ requestRouter.post(
   "/request/review/:status/:requestId",
   userAuth,
   async (req, res) => {
+    console.log("Review Connection Request API Called");
     try {
       // loggedId == toUserId,  status = interested
       // request id should be valid present in DB
@@ -95,7 +97,7 @@ requestRouter.post(
     } catch (err) {
       res.status(400).send("Error: " + err.message);
     }
-  }
+  },
 );
 
 module.exports = requestRouter;

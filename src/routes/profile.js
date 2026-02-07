@@ -8,6 +8,7 @@ const validator = require("validator"); //'validator' Library
 
 // Profile View API - get user profile data
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
+  console.log("Profile View API Called");
   try {
     const user = req.user;
     res.send(user);
@@ -18,6 +19,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
 
 // Profile Edit API - edit user profile data in DB
 profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
+  console.log("Profile Edit API Called");
   try {
     // Validate Edit data
     if (!validateEditProfileData(req)) {
@@ -39,6 +41,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 
 // Profile Password Update API - update user password in DB
 profileRouter.patch("/profile/password", userAuth, async (req, res) => {
+  console.log("Profile Password Update API Called");
   try {
     const newPassword = req.body.password;
     const loggedInUser = req.user;
@@ -48,7 +51,7 @@ profileRouter.patch("/profile/password", userAuth, async (req, res) => {
       !validator.isStrongPassword(newPassword)
     ) {
       throw new Error(
-        "Enter a strong Password! It should be atleast 8 characters length, 1 uppercase, 1 lowercase, 1 number, 1 special symbol."
+        "Enter a strong Password! It should be atleast 8 characters length, 1 uppercase, 1 lowercase, 1 number, 1 special symbol.",
       );
     }
 

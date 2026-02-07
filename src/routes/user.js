@@ -17,6 +17,7 @@ const USER_SAFE_DATA = [
 
 // GET API - get all the Pending connection requests for the loggedIn user
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
+  console.log("User Requests Received API Called");
   try {
     const loggedInUser = req.user;
 
@@ -38,6 +39,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
 
 // GET API - get all my connections
 userRouter.get("/user/connections", userAuth, async (req, res) => {
+  console.log("User All Connections API Called");
   try {
     const loggedInUser = req.user;
 
@@ -68,6 +70,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
 
 // Feed API with Pagination - /feed?page=2&limit=10
 userRouter.get("/feed", userAuth, async (req, res) => {
+  console.log("Feed API Called");
   try {
     /* User should see all user profile cards except:
      0. his own card

@@ -22,6 +22,7 @@ const userAuth = async (req, res, next) => {
     }
 
     req.user = user;
+    console.log("AUTH Middleware Called");
     next();
   } catch (err) {
     res.status(400).send("Error: " + err.message);

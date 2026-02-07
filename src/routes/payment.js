@@ -12,6 +12,7 @@ const userModel = require("../models/user.js"); // DB model
 
 // Create Order API
 paymentRouter.post("/payment/create", userAuth, async (req, res) => {
+  console.log("Payment Create Order API Called");
   try {
     const { membershipType } = req.body; // "gold" or "silver"
     const { firstName, lastName, emailId } = req.user;
@@ -25,11 +26,12 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
         // Meta data about Payment
         firstName: firstName,
         lastName: lastName,
+        emailId: emailId,
         membershipType: membershipType,
       },
     });
 
-    // 2. Save it in Database
+    // 2. Save it in my Database
     console.log(order);
     // creating a new document instance using Payment model
     const payment = new paymentModel({
@@ -43,7 +45,7 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
     });
     const savedPayment = await payment.save(); // Saves in DB
 
-    // 3. Return the 'Order details' to Frontend.
+    // 3. Return back my 'Order details' to Frontend.
     res.json({
       ...savedPayment.toJSON(),
       razorpayKeyId: process.env.RAZORPAY_KEY_ID, // Frontend need this 'Razorpay Key Id' to open 'Razorpay Payment Dialog Checkout Box'.
@@ -61,6 +63,7 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
     so, use "NGROK" library. it creates a Public URL and receives user traffic and forwards requests to our localhost server.  
  */
 paymentRouter.post("/payment/webhook", async (req, res) => {
+  console.log("Payment Webhook API Called");
   try {
     const webhookSignature = req.get("x-razorpay-signature"); // Razorpay sends the header and body. we have to verify webhook signature header.
     const isWebhookValid = validateWebhookSignature(
@@ -81,7 +84,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
     payment.status = paymentDetails.status;
     await payment.save();
 
-    // 2. Update the User as Premium
+    //* 2. Update the User as Premium in Database(user collection)
     const user = await userModel.findOne({ _id: payment.userId });
     user.isPremium = true;
     user.membershipType = payment.notes.membershipType;
@@ -95,7 +98,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
     }
     */
 
-    //  3. return 'success' response to razorpay
+    // 3. return 'success' response to razorpay
     return res.status(200).json({ msg: "Webhook received successfully" });
   } catch (err) {
     console.error(err);

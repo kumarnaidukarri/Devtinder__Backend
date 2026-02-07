@@ -9,6 +9,7 @@ const { sendEmail } = require("../utils/email.js"); // Email Service
 
 // Signup API - insert user data into Database
 authRouter.post("/signup", async (req, res) => {
+  console.log("Signup API Called");
   try {
     // Validation of data
     validateSignUpData(req);
@@ -66,6 +67,7 @@ authRouter.post("/signup", async (req, res) => {
 
 // Login API - user login using {email, password}
 authRouter.post("/login", async (req, res) => {
+  console.log("Login API Called");
   try {
     // Email validation
     const { emailId, password } = req.body;
@@ -102,6 +104,7 @@ authRouter.post("/login", async (req, res) => {
 
 // Logout API
 authRouter.post("/logout", async (req, res) => {
+  console.log("Logout API Called");
   // Delete JWT token from Cookies and Expire token
   res.cookie("token", null, { expires: new Date(Date.now()) });
   res.send("Logout Success!!!");
