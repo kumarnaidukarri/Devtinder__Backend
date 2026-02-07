@@ -85,6 +85,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
     const user = await userModel.findOne({ _id: payment.userId });
     user.isPremium = true;
     user.membershipType = payment.notes.membershipType;
+    await user.save();
 
     // Activated Events in Web Hooks
     /*
@@ -96,6 +97,21 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 
     //  3. return 'success' response to razorpay
     return res.status(200).json({ msg: "Webhook received successfully" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: err.message });
+  }
+});
+
+// API verifies User is Premium or Not. i.e, Membership(silver/gold) purchased or not.
+paymentRouter.get("/premium/verify", userAuth, async (req, res) => {
+  console.log("Premium Verify API Called");
+  try {
+    const user = req.user.toJSON(); // converts Mongoose Document to plain JavaScript object
+    if (user.isPremium === true) {
+      return res.json({ isPremium: true });
+    }
+    return res.json({ isPremium: user.isPremium });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ msg: err.message });
