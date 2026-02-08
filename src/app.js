@@ -49,3 +49,21 @@ connectDB()
     console.error("Database connection Failed...");
     console.log(err);
   });
+
+//
+/*
+ Realtime Chatting Application using Web Sockets.
+ "Socket.IO Library" :-
+ it is a JavaScript library built on top of 'Web Socket' and fallback techniques.
+ it enables 'low-latency', 'bi-directional', 'event-based' communication between client and server.
+ it automatically handles - Connection management, Auto Reconnection, Fallback to HTTP long-polling if WebSocket is not supported.
+
+ command: npm install socket.io
+ it gives 2 APIs Docs:
+  i)  Client API(Frontend):
+       docs url: https://socket.io/docs/v4/client-api/
+       Setup steps: 
+  ii) Server API(Backend) :
+       docs url: https://socket.io/docs/v4/server-api/
+       Setup steps: 
+*/
