@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node --env-file .env ./src/app.js",
     "dev": "nodemon --env-file .env ./src/app.js",
-    "ngrok": "ngrok http 3000 --authtoken '39LxDhBvtCtVNHRqb3k3Vv5cir6_4f4TycXi2BnGuYQo65mJ9'"
+    "ngrok": "ngrok http 3000 --authtoken  39LxDhBvtCtVNHRqb3k3Vv5cir6_4f4TycXi2BnGuYQo65mJ9"
   },
   "author": "Kumar Naidu",
   "license": "ISC",
