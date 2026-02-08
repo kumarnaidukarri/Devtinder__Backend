@@ -1,5 +1,8 @@
 const express = require("express");
-const app = express();
+const app = express(); // Express Server
+
+const http = require("http");
+const server = http.createServer(app); // creating a Http Server from existing Express Server(app).
 
 // require("dotenv").config();
 /* install "dotenv" library and config setup needed for accessing '.env' variables. if Nodejs version is below 20. 
@@ -38,7 +41,7 @@ connectDB()
   .then(() => {
     console.log("Database connection Success ...");
     //only after DB connection, listening for API client requests
-    app.listen(Number(process.env.Port_Number) || 3000, function () {
+    server.listen(Number(process.env.Port_Number) || 3000, function () {
       // Accessing Port_Number from '.ENV' file
       console.log(
         `Server listening on port ${process.env.Port_Number || 3000} ...`,
@@ -66,4 +69,7 @@ connectDB()
   ii) Server API(Backend) :
        docs url: https://socket.io/docs/v4/server-api/
        Setup steps: 
+        1. Configure your Server: 
+           let http = require('http');
+           let server = http.createServer(app); // creating a Http Server from existing Express Server(app).     
 */
