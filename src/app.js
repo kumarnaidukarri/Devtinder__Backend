@@ -2,7 +2,7 @@ const express = require("express");
 const app = express(); // Express Server
 
 const http = require("http");
-const server = http.createServer(app); // creating a Http Server from existing Express Server(app).
+const server = http.createServer(app); // creating a Http Server from existing Express Server(app). it can handle Express routes, websockets/socket.io
 
 // require("dotenv").config();
 /* install "dotenv" library and config setup needed for accessing '.env' variables. if Nodejs version is below 20. 
@@ -37,6 +37,10 @@ app.use("/", requestRouter);
 app.use("/", userRouter);
 app.use("/", paymentRouter);
 
+// SOCKETS IO
+const initializeSocket = require("./utils/socket.js"); // socket module file
+initializeSocket(server);
+
 connectDB()
   .then(() => {
     console.log("Database connection Success ...");
@@ -52,24 +56,3 @@ connectDB()
     console.error("Database connection Failed...");
     console.log(err);
   });
-
-//
-/*
- Realtime Chatting Application using Web Sockets.
- "Socket.IO Library" :-
- it is a JavaScript library built on top of 'Web Socket' and fallback techniques.
- it enables 'low-latency', 'bi-directional', 'event-based' communication between client and server.
- it automatically handles - Connection management, Auto Reconnection, Fallback to HTTP long-polling if WebSocket is not supported.
-
- command: npm install socket.io
- it gives 2 APIs Docs:
-  i)  Client API(Frontend):
-       docs url: https://socket.io/docs/v4/client-api/
-       Setup steps: 
-  ii) Server API(Backend) :
-       docs url: https://socket.io/docs/v4/server-api/
-       Setup steps: 
-        1. Configure your Server: 
-           let http = require('http');
-           let server = http.createServer(app); // creating a Http Server from existing Express Server(app).     
-*/
