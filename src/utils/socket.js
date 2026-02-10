@@ -54,7 +54,22 @@ const initializeSocket = (httpServer) => {
       socket.join(roomId); // creates a room or joins the room.
       console.log("Joining Room : ", roomId);
     });
-    socket.on("sendMessage", () => {});
+
+    socket.on("sendMessage", ({ firstName, userId, targetUserId, text }) => {
+      // userA sends the message to userB.  our backend server should send this message to UserB.
+      console.log("'sendMessage' event got Hitted in Socket Server");
+      const roomId = [userId, targetUserId].sort().join("_");
+      // message will be sent to 'roomId' using 'io.to(room_id)'.
+      //  Server will emit/call Event to Frontend using 'emit()'.  i.e, 'messageReceived' event must be configured on client side.
+      //  Emit the event 'messageReceived' to all clients in the room. Both sender and receiver will receive this event. Frontend should listen for "messageReceived".
+      io.to(roomId).emit("messageReceived", { firstName, text }); // Emit a 'msgReceived' event to Frontend Client.  i.e, all users in room get this event emited in their frontend.
+      /* Flow: 
+          Frontend userA emits a sendMsg event -> Backend listens for 'sendMsg' event -> 
+          server receive msg -> server pass it to everyone in that room ->
+          Server emits 'receiveMsg' event to frontend -> Frontend(everyone) listens for  this 'receiveMsg' event.
+      */
+    });
+
     socket.on("disconnect", () => {});
   });
 };
