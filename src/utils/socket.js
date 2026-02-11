@@ -1,5 +1,12 @@
 // Socket.js file contains socket setup
 const socket = require("socket.io"); // "Socket.Io" Library
+const crypto = require("crypto"); // "Crypto" Library
+const getSecretRoomId = ({ userId, targetUserId }) => {
+  return crypto
+    .createHash("sha256")
+    .update([userId, targetUserId].sort().join("_"))
+    .digest("hex");
+};
 
 const initializeSocket = (httpServer) => {
   const io = socket(httpServer, { cors: { origin: "http://localhost:5173" } }); // creating a 'Socket IO Server' and attaching to existing nodejs httpServer.
@@ -41,7 +48,9 @@ const initializeSocket = (httpServer) => {
          With this logic, both users can generate same room id and join       
        */
 
-      const roomId = [userId, targetUserId].sort().join("_"); // "140011_225441"
+      // const roomId = [userId, targetUserId].sort().join("_"); // "140011_225441"
+      const roomId = getSecretRoomId(userId, targetUserId);
+      console.log("Secure Hashed RoomId: ", roomId);
       /* A Socket is a 'connected user'. A Room is a logical group of sockets. i.e, temporary in memory.
          Users in the same room can receive the same messages. 
          A Room is destroyed, when all sockets leave room or all sockets disconnect.    
@@ -58,7 +67,9 @@ const initializeSocket = (httpServer) => {
     socket.on("sendMessage", ({ firstName, userId, targetUserId, text }) => {
       // userA sends the message to userB.  our backend server should send this message to UserB.
       console.log("'sendMessage' event got Hitted in Socket Server");
-      const roomId = [userId, targetUserId].sort().join("_");
+      // const roomId = [userId, targetUserId].sort().join("_");
+      const roomId = getSecretRoomId(userId, targetUserId);
+      console.log("Secure Hashed RoomId: ", roomId);
       // message will be sent to 'roomId' using 'io.to(room_id)'.
       //  Server will emit/call Event to Frontend using 'emit()'.  i.e, 'messageReceived' event must be configured on client side.
       //  Emit the event 'messageReceived' to all clients in the room. Both sender and receiver will receive this event. Frontend should listen for "messageReceived".
