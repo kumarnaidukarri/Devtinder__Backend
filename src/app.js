@@ -38,8 +38,8 @@ app.use("/", userRouter);
 app.use("/", paymentRouter);
 
 // SOCKETS IO
-const initializeSocket = require("./utils/socket.js"); // socket module file
-initializeSocket(server);
+const initializeSocketServer = require("./utils/socket.js"); // socket module file
+initializeSocketServer(server);
 
 connectDB()
   .then(() => {
