@@ -1,6 +1,7 @@
 // Socket.js file contains 'Socket' Server setup.
 const { Server } = require("socket.io"); // Socket.Io Library
 const crypto = require("crypto"); // Crypto Library
+const chatModel = require("../models/chat.js"); // chat DB model
 const getSecretRoomId = (userId, targetUserId) => {
   return crypto
     .createHash("sha256")
@@ -66,33 +67,53 @@ const initializeSocketServer = (httpServer) => {
          - If the room does not exist → Socket.IO creates it and adds the socket.
       */
       socket.join(roomId); // creates a room or joins the room.
-      console.log("Joined into Room");
+      console.log(userId + " Joined into Room");
     });
 
     // Send Message Event
-    socket.on("sendMessage", ({ firstName, userId, targetUserId, text }) => {
-      /*
-       * Triggered when user sends a message.
-       * Payload : { firstName, userId, targetUserId, text }
-       */
-      console.log(
-        "'sendMessage' event emitted Called.",
-        "Message received from:",
-        firstName,
-      );
-      // const roomId = [userId, targetUserId].sort().join("_");
-      const roomId = getSecretRoomId(userId, targetUserId);
-      console.log("Secure Hashed RoomId: ", roomId);
+    socket.on(
+      "sendMessage",
+      async ({ firstName, userId, targetUserId, text }) => {
+        /*
+         * Triggered when user sends a message.
+         * Payload : { firstName, userId, targetUserId, text }
+         */
+        console.log(
+          "'sendMessage' event emitted Called.",
+          "Message received from:",
+          firstName,
+        );
+        // const roomId = [userId, targetUserId].sort().join("_");
+        const roomId = getSecretRoomId(userId, targetUserId);
 
-      /*
-       *  message will be sent to 'roomId' using 'io.to(room_id)'.
-       *  server  will emit/call Event to Frontend using 'emit()'.
-       * Emit message to 'ALL users' in the room.  (both sender and receiver).
-       * Frontend must listen to :  socket.on("messageReceived", handler).
-       */
+        // *** Save Messages(chat) in the Database.
+        try {
+          let chat = await chatModel.findOne({
+            participants: { $all: [userId, targetUserId] },
+          }); // find the chat(obj) in Chat Collection(arr), where it contains both 'userId and targetUserId' in Participants.
+          if (!chat) {
+            // if chat not exists.  Create new chat data into DB.
+            chat = new chatModel({
+              participants: [userId, targetUserId],
+              messages: [],
+            });
+          }
+          chat.messages.push({ senderId: userId, text });
+          await chat.save();
 
-      socketServer.to(roomId).emit("messageReceived", { firstName, text }); // Emit an event 'msgReceived' to Frontend Client. i.e,all users in room get this event emitted in their frontend.
-    });
+          /*
+           *  message will be sent to 'roomId' using 'io.to(room_id)'.
+           *  server  will emit/call Event to Frontend using 'emit()'.
+           * Emit message to 'ALL users' in the room.  (both sender and receiver).
+           * Frontend must listen to :  socket.on("messageReceived", handler).
+           */
+
+          socketServer.to(roomId).emit("messageReceived", { firstName, text }); // Emit an event 'msgReceived' to Frontend Client. i.e,all users in room get this event emitted in their frontend.
+        } catch (err) {
+          console.log(err);
+        }
+      },
+    );
 
     // Disconnect Event
     socket.on("disconnect", () => {
