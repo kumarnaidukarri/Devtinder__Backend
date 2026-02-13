@@ -73,7 +73,7 @@ const initializeSocketServer = (httpServer) => {
     // Send Message Event
     socket.on(
       "sendMessage",
-      async ({ firstName, userId, targetUserId, text }) => {
+      async ({ firstName, lastName, userId, targetUserId, text }) => {
         /*
          * Triggered when user sends a message.
          * Payload : { firstName, userId, targetUserId, text }
@@ -108,7 +108,9 @@ const initializeSocketServer = (httpServer) => {
            * Frontend must listen to :  socket.on("messageReceived", handler).
            */
 
-          socketServer.to(roomId).emit("messageReceived", { firstName, text }); // Emit an event 'msgReceived' to Frontend Client. i.e,all users in room get this event emitted in their frontend.
+          socketServer
+            .to(roomId)
+            .emit("messageReceived", { firstName, lastName, text }); // Emit an event 'msgReceived' to Frontend Client. i.e,all users in room get this event emitted in their frontend.
         } catch (err) {
           console.log(err);
         }
