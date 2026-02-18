@@ -87,13 +87,18 @@ authRouter.post("/login", async (req, res) => {
       // Create a JWT Token
       const token = await user.getJWT();
 
-      // Add the Token to Cookie and send the response back to user
+      /* Add the Token to Cookie in Response Header
+         it adds a "Header"(set-cookie:token=value) to Response. which tells browser to store the cookie. */
       res.cookie("token", token, {
+        httpOnly: true, // Prevents JS on frontend from reading Cookies (safer)
+        secure: true, // only sent over HTTPS
+        sameSite: "None", // allow cross-origin cookies
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      }); //cookie with 1day expiry
+      }); // cookie name, cookie value, config options(cookie with 1day expiry).
 
       // res.send("Login Success!!!");
-      res.send(user);
+      res.send(user); // sends response with body + headers.
+      /* Explanation: Backend sends response with headers, Browser sees 'set-cookie', Browser stores token. In future, browser automatically sends this cookie to Backend Server during API call */
     } else {
       throw new Error("Invalid credentials");
     }
