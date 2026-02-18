@@ -32,8 +32,25 @@ const getSecretRoomId = (userId, targetUserId) => {
 }; // func to generate unique RoomId in 'secured hash' format.
 
 const initializeSocketServer = (httpServer) => {
+  const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.FRONTEND_URL_FOR_CORS,
+  ];
+
   const socketServer = new Server(httpServer, {
-    cors: { origin: "http://localhost:5173" },
+    cors: {
+      origin: function (clientOrigin, callback) {
+        // Allow requests with "NO ORIGIN"(undefined).  ex:Postman, server-to-server
+        if (
+          allowedOrigins.includes(clientOrigin) ||
+          clientOrigin === undefined
+        ) {
+          callback(null, true); // cors allow the origin
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+    },
   }); // Create a 'Socket IO Server' and attach to Http server.
 
   /* Fires whenever a new client connects. 'Socket' represents 'ONE Connected User' */
