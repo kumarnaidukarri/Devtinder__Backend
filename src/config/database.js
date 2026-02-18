@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const connectDB = async () => {
-  await mongoose.connect(process.env.Mongodb_Url); // Accessing Mongodb connection url string from '.ENV' file
+  await mongoose.connect(process.env.MONGODB_URL); // Accessing Mongodb connection url string from '.ENV' file
 };
 
 module.exports = { connectDB };

@@ -14,9 +14,20 @@ const { connectDB } = require("./config/database.js");
 const cookieParser = require("cookie-parser"); //'cookie-parser' Library
 const cors = require("cors"); //'cors' Library
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_URL_FOR_CORS,
+];
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (clientOrigin, callback) {
+      // Allow requests with "NO ORIGIN"(undefined).  ex:Postman, server-to-server
+      if (allowedOrigins.includes(clientOrigin) || clientOrigin === undefined) {
+        callback(null, true); // cors allow the origin
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 ); // middleware fix cors
@@ -47,10 +58,10 @@ connectDB()
   .then(() => {
     console.log("Database connection Success ...");
     //only after DB connection, listening for API client requests
-    server.listen(Number(process.env.Port_Number) || 3000, function () {
+    server.listen(Number(process.env.PORT_NUMBER) || 3000, function () {
       // Accessing Port_Number from '.ENV' file
       console.log(
-        `Server listening on port ${process.env.Port_Number || 3000} ...`,
+        `Server listening on port ${process.env.PORT_NUMBER || 3000} ...`,
       );
     });
   })
@@ -58,6 +69,5 @@ connectDB()
     console.error("Database connection Failed...");
     console.log(err);
   });
-
 
 // The END Completed
