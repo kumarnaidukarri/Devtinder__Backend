@@ -50,6 +50,11 @@ app.use("/", userRouter);
 app.use("/", paymentRouter);
 app.use("/", chatRouter);
 
+// Test route
+app.get("/test", (req, res) => {
+  res.send("Backend is running fine ...");
+});
+
 // SOCKETS IO
 const initializeSocketServer = require("./utils/socket.js"); // socket module file
 initializeSocketServer(server);
