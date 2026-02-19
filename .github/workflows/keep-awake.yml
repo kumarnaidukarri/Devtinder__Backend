@@ -1,0 +1,21 @@
+# keep-awake.yml,
+# this file used to keep our "Backend Server" alive on "Render Deployment Platform".
+# Render-Free-Tier puts inactive apps to sleep after ~15 minutes. 3 ways to fix it - Github actions workflow(yaml), Cronjob.com, UptimeRobot.
+
+name: Keep Devtinder Backend Awake in 'Render Deployment Platform'
+
+# CRON runs every 10 minutes
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: # optional, allows you to manually trigger run the workflow from github
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend
+        run: curl -s https://devtinder-backend-x5rv.onrender.com/health
+
+# defines a job named 'ping'. Github uses temporary linux server to run this job.
+# 'curl' command sends an "HTTP GET Request" to the mentioned 'Backend URL endpoint' every 10 minutes(cron).

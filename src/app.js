@@ -54,6 +54,10 @@ app.use("/", chatRouter);
 app.get("/test", (req, res) => {
   res.send("Backend is running fine ...");
 });
+// Health check route - Github actions workflow, UptimeRobot, CronJob.
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
 
 // SOCKETS IO
 const initializeSocketServer = require("./utils/socket.js"); // socket module file
